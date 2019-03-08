@@ -234,7 +234,6 @@ main(void)
 	char *t0, *t1, *t2;
 	char *rootfs = NULL;
     char *homefs = NULL;
-    char pacs[255];
     FILE *fp;
 	if (!(dpy = XOpenDisplay(NULL))) {
 		fprintf(stderr, "dwmstatus: cannot open display.\n");
@@ -254,12 +253,10 @@ main(void)
 		homefs = get_freespace("/home");
         rootfs = get_freespace("/");
         
-		fp = fopen("/tmp/packageCount", "r");
-        fscanf(fp, "%s", pacs);
-        fclose(fp);
+
 		
 		status = smprintf("T:%s|%s|%s • B:%s • HOME %s% • ROOT %s% • %s • P %s",
-				t0, t1, t2, bat, homefs, rootfs, tmbln, pacs);
+				t0, t1, t2, bat, homefs, rootfs, tmbln);
 		setstatus(status);
 
 		free(t0);
