@@ -250,8 +250,7 @@ main(void)
 		t0 = gettemperature("/sys/class/hwmon/hwmon0", "temp1_input");
 		t1 = gettemperature("/sys/class/hwmon/hwmon1", "temp1_input");
 		t2 = gettemperature("/sys/class/hwmon/hwmon2", "temp1_input");
-		homefs = get_freespace("/home");
-        rootfs = get_freespace("/");
+        	rootfs = get_freespace("/");
         
 
 		
@@ -268,7 +267,6 @@ main(void)
 		free(tmar);
 		free(tmutc);
 		free(tmbln);
-		free(homefs);
 		free(rootfs);
 		free(status);
 	}
