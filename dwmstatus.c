@@ -254,8 +254,8 @@ main(void)
         
 
 		
-		status = smprintf("T:%s|%s|%s • B:%s • HOME %s% • ROOT %s% • %s • P %s",
-				t0, t1, t2, bat, homefs, rootfs, tmbln);
+		status = smprintf("T:%s|%s|%s • B:%s • HOME %s% • %s • P %s",
+				t0, t1, t2, bat, rootfs, tmbln);
 		setstatus(status);
 
 		free(t0);
