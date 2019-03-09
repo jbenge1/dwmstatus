@@ -26,6 +26,10 @@
 
 #include <X11/Xlib.h>
 
+
+#include <alsa/asoundlib.h>
+#include <alsa/control.h>
+
 char *tzargentina = "America/Buenos_Aires";
 char *tzutc = "UTC";
 //char *tzberlin = "America/Phoenix";
@@ -222,6 +226,37 @@ char *check_internet()
 }
 
 int
+get_vol(void)
+{
+    int vol;
+    snd_hctl_t *hctl;
+    snd_ctl_elem_id_t *id;
+    snd_ctl_elem_value_t *control;
+
+// To find card and subdevice: /proc/asound/, aplay -L, amixer controls
+    snd_hctl_open(&hctl, "hw:0", 0);
+    snd_hctl_load(hctl);
+
+    snd_ctl_elem_id_alloca(&id);
+    snd_ctl_elem_id_set_interface(id, SND_CTL_ELEM_IFACE_MIXER);
+
+// amixer controls
+    snd_ctl_elem_id_set_name(id, "Master Playback Volume");
+
+    snd_hctl_elem_t *elem = snd_hctl_find_elem(hctl, id);
+
+    snd_ctl_elem_value_alloca(&control);
+    snd_ctl_elem_value_set_id(control, id);
+
+    snd_hctl_elem_read(elem, control);
+    vol = (int)snd_ctl_elem_value_get_integer(control,0);
+
+    snd_hctl_close(hctl);
+    return vol;
+}
+
+
+int
 main(void)
 {
 	char *status;
@@ -233,6 +268,7 @@ main(void)
 	char *tmbln;
 	char *t0, *t1, *t2;
 	char *rootfs = NULL;
+	int vol;
     char *homefs = NULL;
     FILE *fp;
 	if (!(dpy = XOpenDisplay(NULL))) {
@@ -241,21 +277,21 @@ main(void)
 	}
     
 	for (;;sleep(20)) {
-		avgs = loadavg();
-		bat = getbattery("/sys/class/power_supply/BAT0");
-		bat1 = getbattery("/sys/class/power_supply/BAT1");
-		tmar = mktimes("%H:%M", tzargentina);
-		tmutc = mktimes("%H:%M", tzutc);
-		tmbln = mktimes("KW %W %a %d %b %H:%M %Z %Y", tzberlin);
-		t0 = gettemperature("/sys/class/hwmon/hwmon0", "temp1_input");
-		t1 = gettemperature("/sys/class/hwmon/hwmon1", "temp1_input");
-		t2 = gettemperature("/sys/class/hwmon/hwmon2", "temp1_input");
+		avgs   = loadavg();
+		bat    = getbattery("/sys/class/power_supply/BAT0");
+		bat1   = getbattery("/sys/class/power_supply/BAT1");
+		tmar   = mktimes("%H:%M", tzargentina);
+		tmutc  = mktimes("%H:%M", tzutc);
+		tmbln  = mktimes("KW %W %a %d %b %H:%M %Z %Y", tzberlin);
+		t0     = gettemperature("/sys/class/hwmon/hwmon0", "temp1_input");
+		t1     = gettemperature("/sys/class/hwmon/hwmon1", "temp1_input");
+		t2     = gettemperature("/sys/class/hwmon/hwmon2", "temp1_input");
         	rootfs = get_freespace("/");
-        
+        	vol    = get_vol();
 
 		
-		status = smprintf("T:%s|%s|%s • B:%s • HOME %s% • %s",
-				t0, t1, t2, bat, rootfs, tmbln);
+		status = smprintf("T:%s|%s|%s • B:%s • HOME %s% • VOL $d% • %s",
+				t0, t1, t2, bat, rootfs, vol, tmbln);
 		setstatus(status);
 
 		free(t0);
@@ -269,7 +305,36 @@ main(void)
 		free(tmbln);
 		free(rootfs);
 		free(status);
-	}
+	}int
+get_vol(void)
+{
+    int vol;
+    snd_hctl_t *hctl;
+    snd_ctl_elem_id_t *id;
+    snd_ctl_elem_value_t *control;
+
+// To find card and subdevice: /proc/asound/, aplay -L, amixer controls
+    snd_hctl_open(&hctl, "hw:0", 0);
+    snd_hctl_load(hctl);
+
+    snd_ctl_elem_id_alloca(&id);
+    snd_ctl_elem_id_set_interface(id, SND_CTL_ELEM_IFACE_MIXER);
+
+// amixer controls
+    snd_ctl_elem_id_set_name(id, "Master Playback Volume");
+
+    snd_hctl_elem_t *elem = snd_hctl_find_elem(hctl, id);
+
+    snd_ctl_elem_value_alloca(&control);
+    snd_ctl_elem_value_set_id(control, id);
+
+    snd_hctl_elem_read(elem, control);
+    vol = (int)snd_ctl_elem_value_get_integer(control,0);
+
+    snd_hctl_close(hctl);
+    return vol;
+}
+
 
 	XCloseDisplay(dpy);
 
