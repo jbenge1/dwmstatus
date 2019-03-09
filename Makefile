@@ -21,7 +21,7 @@ ${OBJ}: config.mk
 
 ${NAME}: ${OBJ}
 	@echo CC -o $@
-	@${CC} -o $@ ${OBJ} ${LDFLAGS}
+	@${CC} -o $@ ${OBJ} ${LDFLAGS} -lasound
 
 clean:
 	@echo cleaning
