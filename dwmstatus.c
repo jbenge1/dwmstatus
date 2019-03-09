@@ -225,10 +225,10 @@ char *check_internet()
 	return(smprintf("ON")); 
 }
 
-int
+float
 get_vol(void)
 {
-    int vol;
+    float vol;
     snd_hctl_t *hctl;
     snd_ctl_elem_id_t *id;
     snd_ctl_elem_value_t *control;
@@ -268,7 +268,7 @@ main(void)
 	char *tmbln;
 	char *t0, *t1, *t2;
 	char *rootfs = NULL;
-	int vol;
+	float vol;
     char *homefs = NULL;
     FILE *fp;
 	if (!(dpy = XOpenDisplay(NULL))) {
@@ -287,7 +287,7 @@ main(void)
 		t1     = gettemperature("/sys/class/hwmon/hwmon1", "temp1_input");
 		t2     = gettemperature("/sys/class/hwmon/hwmon2", "temp1_input");
         	rootfs = get_freespace("/");
-        	vol    = get_vol();
+        	vol    = get_vol()/1.4;
 
 		
 		status = smprintf("T:%s|%s|%s • B:%s • HOME %s% • VOL %d% • %s",
