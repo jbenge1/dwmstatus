@@ -16,7 +16,7 @@ LIBS = -L/usr/lib -lc -L${X11LIB} -lX11
 
 # flags
 CPPFLAGS = -DVERSION=\"${VERSION}\" -D_DEFAULT_SOURCE
-CFLAGS = -g -Wall -O0 ${INCS} ${CPPFLAGS} `pkg-config --libs alsa`
+CFLAGS = -g -Wall -lasound -O0 ${INCS} ${CPPFLAGS}
 #CFLAGS = -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS}
 LDFLAGS = -g ${LIBS}
 #LDFLAGS = -s ${LIBS}
