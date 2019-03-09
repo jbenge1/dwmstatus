@@ -225,10 +225,10 @@ char *check_internet()
 	return(smprintf("ON")); 
 }
 
-float
+int
 get_vol(void)
 {
-    float vol;
+    int vol;
     snd_hctl_t *hctl;
     snd_ctl_elem_id_t *id;
     snd_ctl_elem_value_t *control;
@@ -268,7 +268,7 @@ main(void)
 	char *tmbln;
 	char *t0, *t1, *t2;
 	char *rootfs = NULL;
-	float vol;
+	int vol;
     char *homefs = NULL;
     FILE *fp;
 	if (!(dpy = XOpenDisplay(NULL))) {
